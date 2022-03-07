@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @Version 1.0 @fecha 27/02/02
  * 	Clase que implementa el propietario del vehiculo que usa el serivicio del parqueadero 
  */
-public class Persona implements Identificación{
+public abstract class Persona implements Identificación{
 	/*
 	 * Atributos
 	 */

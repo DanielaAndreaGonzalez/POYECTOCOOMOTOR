@@ -8,6 +8,8 @@ import java.util.Scanner;
 
 /**
  * @author DanielaAGonzalezH
+ * @Version 1.0 @fecha 06/03/2022
+ * 
  *
  */
 public class Controller {
@@ -28,8 +30,9 @@ public class Controller {
 		System.out.println("*********************************");
 		cadena = "\nPresione 1. para Crear Carro   "+
 		          "\nPresione 2 para Crear Moto     "+
-				  "\nPresione 3. para generar informe"+
-		          "\nPresione 4. para salir del menú";
+				  "\nPresione 3. para generar informe individual de un determinado cliente"+
+		          "\nPresione 4. para general el informe general de todos los cliente"+
+		          "\nPresione 5. para salir del menú";
 		System.out.println("**********************************");
 		int opcion = leerInt(cadena);
 		return opcion; 	}
@@ -149,7 +152,7 @@ public class Controller {
 	/**
 	 * Método que busca al cliente con su cédula
 	 * @param cedula
-	 * @return
+	 * @return si existe o no
 	 */
 	public boolean buscarCliente(String cedula) {
 		boolean bandera = false; 
@@ -168,8 +171,10 @@ public class Controller {
 		return bandera;
 	}
 	/**
-	 * Método donde se encuentra el menú
-	 * @return un true si ya está y un false sino está
+	 * Si ya existe una lista cliente busca la cédula existente en esa lista y añade el 
+	 * carro a ese cliente
+	 * @param carro
+	 * @param cedula
 	 */
 	public void añadirVehiculoClienteExistente(Carro carro,String cedula) {
 		
@@ -179,6 +184,12 @@ public class Controller {
 			}
 		}
 	}
+	/**
+	 * Si ya existe una lista cliente busca la cédula existente en esa lista y añade la
+	 * moto a la lista del cliente
+	 * @param moto
+	 * @param cedula
+	 */
 	public void añadirMotoClienteExistente(Moto moto,String cedula) {
 		for (Cliente miCliente: listaCliente) {
 			if(miCliente.getCedula().equals(cedula)) {
@@ -187,16 +198,20 @@ public class Controller {
 		}
 		System.out.println();
 	}
-	
-	
-	
+	/**
+	 * Método que genera el informe de acuerdo a un cliente que busca por su cédula
+	 */
 	public void generarInforme() {
 		String cedula = leerCadena("Ingrese la cédula del cliente que desea generar el informe: ");
 		String cadena = "";
 		for (Cliente miCliente : listaCliente) {
 			if (miCliente.getCedula().equals(cedula)) {
 				cadena += "\n DATOS: \nNombre (s): " + miCliente.getNombre() + "\nApellido (s): "
-						+ miCliente.getApellido() + "\nTeléfono (s): "+miCliente.getTelefono(); 
+						+ miCliente.getApellido(); 
+				for(String telefono: miCliente.getTelefono()) {
+					cadena +=  "\nTeléfono (s): "+telefono;
+				}
+				
 				for (Carro carro : miCliente.getListaCarro()) {
 						cadena += "\n Carros: Placa"+carro.getPlaca()+
 								"\n Marca: "+carro.getMarca()+
@@ -215,7 +230,40 @@ public class Controller {
 		}
 		System.out.println(cadena);
 	}
+	/**
+	 * Método que genera el informe general de todos los clientes con 
+	 * sus respectivos vehículos
+	 */
+	public void generainformeGENERAL() {
+		String cadena ="";
+		for (Cliente miCliente : listaCliente) {
+				cadena += "\n DATOS: \nNombre (s): " + miCliente.getNombre() + "\nApellido (s): "
+						+ miCliente.getApellido(); 
+				for(String telefono: miCliente.getTelefono()) {
+					cadena +=  "\nTeléfono (s): "+telefono;
+				}
+				for (Carro carro : miCliente.getListaCarro()) {
+						cadena += "\n Carros: Placa"+carro.getPlaca()+
+								"\n Marca: "+carro.getMarca()+
+								"\n Modelo :"+carro.getModelo()+
+								"\n Ancho: "+carro.getAncho()+
+								"\n Alto: "+carro.getAlto();
+				}
+				for (Moto  moto: miCliente.getListaMoto()) {
+					cadena += "\n Motos: Placa"+moto.getPlaca()+
+							"\n Marca: "+moto.getMarca()+
+							"\n Modelo :"+moto.getModelo()+
+							"\n limitador: "+(moto.isLimitador()?"SI":"NO");
+					}
+				}
+		System.out.println(cadena);
+	}
+		
 	
+	
+	/**
+	 * Método principal que itera el menú
+	 */
 	public void iniciarMenu() {
 		boolean bandera =true;
 		while(bandera) {
@@ -243,7 +291,8 @@ public class Controller {
 				Moto nuevaMoto = crearMoto(); 
 				cedula = leerCadena("Ingrese la cédula del cliente");
 				if ( buscarCliente(cedula) == true) {
-					cliente.addMoto(nuevaMoto);
+					añadirMotoClienteExistente(nuevaMoto, cedula);
+					System.out.println("¡ÉXITO! Vehículo agregado");
 				}else {
 					Cliente cliente =crearCliente(cedula);
 					cliente.addMoto(nuevaMoto);
@@ -261,6 +310,10 @@ public class Controller {
 				bandera=true;
 				break;
 			case 4:
+				generainformeGENERAL();
+				bandera =true;
+				break;
+			case 5:
 				System.out.println("Adiós");
 				bandera = false;
 				break;

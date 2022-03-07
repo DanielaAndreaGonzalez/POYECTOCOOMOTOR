@@ -56,10 +56,9 @@ public class Cliente extends Persona{
 
 	public Cliente(String cedula, String nombre, String apellido,ArrayList <String> telefonos) {
 		//	Llama al constructor de la super clase
-		super(cedula, nombre, apellido);
+		super(cedula, nombre, apellido,telefonos);
 		this.listaMoto = new ArrayList<>();
-		this.listaCarro = new ArrayList<>();
-		
+		this.listaCarro = new ArrayList<>();	
 	}
 	
 	public Cliente() {
